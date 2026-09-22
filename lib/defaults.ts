@@ -1084,7 +1084,7 @@ export const newsDefaults: any = {
     backgroundImage:
       'https://images.unsplash.com/photo-1504711331083-9c895941bf81?w=1920&q=80',
   },
-    featured: {
+  featured: {
     badge: 'Featured',
     image: '/images/sudd2.png',
     fallbackIcon: 'fa-solid fa-newspaper',
@@ -1176,7 +1176,7 @@ export const newsDefaults: any = {
     text: 'Get the latest news, project updates, and opportunities straight to your inbox.',
     placeholder: 'Your email address',
     buttonText: 'Subscribe',
-    web3formsKey: 'YOUR_WEB3FORMS_KEY_HERE',
+    web3formsKey: 'ec45243e-76e9-42d9-a0bb-9af8694af0a4',
     successMessage: 'Thank you! You are now subscribed.',
     privacyNote: 'We respect your privacy. Unsubscribe anytime.',
     backgroundImage:
@@ -1394,7 +1394,7 @@ export const getInvolvedDefaults: any = {
       submitText: 'Submit Application',
       successMessage:
         'Thank you! Your volunteer application has been received. We will get back to you soon.',
-      web3formsKey: 'YOUR_WEB3FORMS_KEY_HERE',
+      web3formsKey: 'ec45243e-76e9-42d9-a0bb-9af8694af0a4',
     },
   },
   donation: {
@@ -1459,7 +1459,7 @@ export const getInvolvedDefaults: any = {
     placeholder: 'Your email address',
     buttonText: 'Subscribe',
     successMessage: 'Thank you! You are now subscribed to our newsletter.',
-    web3formsKey: 'YOUR_WEB3FORMS_KEY_HERE',
+    web3formsKey: 'ec45243e-76e9-42d9-a0bb-9af8694af0a4',
     socials: [
       { icon: 'fa-brands fa-facebook-f', iconBg: 'navy', url: 'https://www.facebook.com' },
       { icon: 'fa-brands fa-x-twitter', iconBg: 'forest', url: 'https://www.twitter.com' },
@@ -1517,7 +1517,6 @@ export const donateDefaults: any = {
     titleAccent: 'Details',
     subtitle:
       'Please use the following information to complete your donation. Contact us if you encounter any issues.',
-    // Main bank fields
     fields: [
       { label: 'Bank Name', value: 'ECOBANK SOUTH SUDAN' },
       { label: 'Account Name', value: 'Sudd Environment Agency' },
@@ -1663,6 +1662,6 @@ export const contactDefaults: any = {
     errorTitle: 'Something went wrong',
     errorMessage:
       'Your message could not be sent. Please try again or email us directly.',
-    web3formsKey: 'YOUR_WEB3FORMS_KEY_HERE',
+    web3formsKey: 'ec45243e-76e9-42d9-a0bb-9af8694af0a4',
   },
 };
