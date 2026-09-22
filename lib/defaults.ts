@@ -517,7 +517,7 @@ export const settingsDefaults: any = {
     tagline: 'Protecting Nature, Empowering Communities',
     description:
       'Sudd Environment Agency (SEA) is a national NGO advocating for wetlands protection, climate action, wildlife conservation, agroforestry, and humanitarian response in South Sudan.',
-    logo: '/images/sealogo.jpg',
+    logo: '/images/sea-logo-2025.jpg',
     favicon: '/favicon.ico',
     contactEmail: 'info@seasouthsudan.org',
     phone: '+211 912 511 115',
@@ -527,7 +527,7 @@ export const settingsDefaults: any = {
     registration: 'Registered National NGO No. 2360, South Sudan',
   },
   header: {
-    logo: '/images/sealogo.jpg',
+    logo: '/images/sea-logo-2025.jpg',
     brandName: 'Sudd Environment',
     brandTagline: 'Agency',
     tagline: 'Protecting Nature',

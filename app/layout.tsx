@@ -37,10 +37,10 @@ export const metadata: Metadata = {
     description: 'Protecting Nature, Empowering Communities.',
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/apple-icon.png',
-  },
+  icon: '/favicon.ico?v=2',
+  shortcut: '/favicon.ico?v=2',
+  apple: '/apple-icon.png?v=2',
+},
   robots: { index: true, follow: true },
 };
 
