@@ -54,7 +54,7 @@ export default function Header() {
       {/* NAVBAR */}
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <Link href="/" className="logo">
-          <img src="sea-logo-2025.jpg" alt="SEA Logo" />
+          <img src="/images/sea-logo-2025.jpg" alt="SEA Logo" />
           <span>Sudd Environment<br />Agency</span>
         </Link>
 

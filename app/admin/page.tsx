@@ -159,7 +159,7 @@ export default function AdminLoginPage() {
             }}
           >
             <img
-              src="sea-logo-2025.jpg"
+              src="/images/sea-logo-2025.jpg"
               alt="SEA Logo"
               style={{
                 width: '100%',

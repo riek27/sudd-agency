@@ -7,7 +7,7 @@ export default function Footer() {
         {/* Brand */}
         <div className="footer-about">
           <Link href="/" className="footer-brand">
-            <img src="sea-logo-2025.jpg" alt="SEA Logo" />
+            <img src="/images/sea-logo-2025.jpg" alt="SEA Logo" />
             <span className="footer-brand-text">
               <strong>Sudd Environment Agency</strong>
               <span>Protecting Nature</span>
