@@ -3,92 +3,148 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Programs', href: '/programs' },
-  { label: 'Impact', href: '/impact' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'News', href: '/news' },
-  { label: 'Partners', href: '/partners' },
-  { label: 'Get Involved', href: '/get-involved' },
-  { label: 'Contact', href: '/contact' },
-];
+const FALLBACK_HEADER = {
+  logo: '/images/sea-logo-2025.jpg',
+  brandName: 'Sudd Environment',
+  brandTagline: 'Agency',
+  tagline: 'Protecting Nature',
+  ctaText: 'Donate',
+  ctaLink: '/donate',
+  topBarPhone: '+211 912 511 115',
+  topBarEmail: 'info@seasouthsudan.org',
+  topBarLinks: [
+    { label: 'Careers', href: '/get-involved#careers' },
+    { label: 'Volunteer', href: '/get-involved#volunteer' },
+  ],
+  navLinks: [
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+    { label: 'Programs', href: '/programs' },
+    { label: 'Impact', href: '/impact' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'News', href: '/news' },
+    { label: 'Partners', href: '/partners' },
+    { label: 'Get Involved', href: '/get-involved' },
+    { label: 'Contact', href: '/contact' },
+  ],
+};
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [header, setHeader] = useState<any>(FALLBACK_HEADER);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    fetch('/api/settings')
+      .then((r) => r.json())
+      .then((json) => {
+        if (json?.header) {
+          setHeader({
+            ...FALLBACK_HEADER,
+            ...json.header,
+            navLinks:
+              Array.isArray(json.header.navLinks) && json.header.navLinks.length > 0
+                ? json.header.navLinks
+                : FALLBACK_HEADER.navLinks,
+            topBarLinks:
+              Array.isArray(json.header.topBarLinks) && json.header.topBarLinks.length > 0
+                ? json.header.topBarLinks
+                : FALLBACK_HEADER.topBarLinks,
+          });
+        }
+      })
+      .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [menuOpen]);
+  const phoneHref = `tel:${(header.topBarPhone || '').replace(/[^0-9+]/g, '')}`;
 
   return (
     <>
       {/* TOP BAR */}
       <div className="top-bar">
         <div className="left">
-          <a href="tel:+211912511115">
-            <i className="fa-solid fa-phone" /> +211 912 511 115
-          </a>
-          <span className="sep">|</span>
-          <a href="mailto:info@seasouthsudan.org">
-            <i className="fa-solid fa-envelope" /> info@seasouthsudan.org
-          </a>
+          {header.topBarPhone && (
+            <a href={phoneHref}>
+              <i className="fa-solid fa-phone" /> {header.topBarPhone}
+            </a>
+          )}
+          {header.topBarEmail && (
+            <>
+              <span className="sep">|</span>
+              <a href={`mailto:${header.topBarEmail}`}>
+                <i className="fa-solid fa-envelope" /> {header.topBarEmail}
+              </a>
+            </>
+          )}
         </div>
         <div className="right">
-          <a href="/get-involved">Volunteer</a>
-          <a href="/donate" style={{ background: 'var(--gold)', color: 'var(--navy)', padding: '6px 16px', borderRadius: 999, fontWeight: 700 }}>
-            Donate Now <i className="fa-solid fa-heart" />
-          </a>
+          {(header.topBarLinks || []).map((l: any, i: number) => (
+            <Link key={i} href={l.href}>
+              {l.label}
+            </Link>
+          ))}
+          {header.ctaText && (
+            <Link
+              href={header.ctaLink || '/donate'}
+              style={{
+                background: 'var(--gold)',
+                color: 'var(--navy)',
+                padding: '6px 16px',
+                borderRadius: 999,
+                fontWeight: 700,
+              }}
+            >
+              Donate Now <i className="fa-solid fa-heart" />
+            </Link>
+          )}
         </div>
       </div>
 
       {/* NAVBAR */}
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      <nav id="mainNav" className="navbar">
         <Link href="/" className="logo">
-          <img src="/images/sea-logo-2025.jpg" alt="SEA Logo" />
-          <span>Sudd Environment<br />Agency</span>
+          <div className="logo-image-container">
+            <img
+              src={header.logo || '/images/sea-logo-2025.jpg'}
+              alt={header.brandName || 'SEA Logo'}
+              className="logo-image"
+            />
+          </div>
+          <span>
+            {header.brandName || 'Sudd Environment'}
+            <br />
+            {header.brandTagline || 'Agency'}
+          </span>
         </Link>
 
         <ul className="nav-links">
-          {NAV_LINKS.map((l) => (
-            <li key={l.href}>
-              <Link href={l.href}>{l.label}</Link>
+          {(header.navLinks || []).map((l: any, i: number) => (
+            <li key={i}>
+              <Link href={l.href} className="nav-link">
+                {l.label}
+              </Link>
             </li>
           ))}
           <li>
-            <Link href="/donate" className="nav-cta">
-              Donate <i className="fa-solid fa-heart" style={{ fontSize: '0.75rem', marginLeft: 6 }} />
+            <Link href={header.ctaLink || '/donate'} className="nav-cta">
+              {header.ctaText || 'Donate'}{' '}
+              <i className="fa-solid fa-heart" style={{ fontSize: '0.75rem', marginLeft: 6 }} />
             </Link>
           </li>
         </ul>
 
-        <button className="mobile-toggle" aria-label="Toggle menu" onClick={() => setMenuOpen(!menuOpen)}>
-          <span /><span /><span />
+        <button id="mobileMenuBtn" className="mobile-toggle" aria-label="Toggle menu">
+          <i className="fa-solid fa-bars text-2xl" />
         </button>
       </nav>
 
       {/* MOBILE MENU */}
-      <div className={`mobile-menu ${menuOpen ? 'active' : ''}`}>
-        {NAV_LINKS.map((l) => (
-          <Link key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>
+      <div id="mobileMenu" className="mobile-menu">
+        {(header.navLinks || []).map((l: any, i: number) => (
+          <Link key={i} href={l.href}>
             {l.label}
           </Link>
         ))}
-        <Link
-          href="/donate"
-          onClick={() => setMenuOpen(false)}
-          style={{ color: 'var(--gold)', fontWeight: 700 }}
-        >
-          Donate
+        <Link href={header.ctaLink || '/donate'} style={{ color: 'var(--gold)', fontWeight: 700 }}>
+          {header.ctaText || 'Donate'}
         </Link>
       </div>
     </>
