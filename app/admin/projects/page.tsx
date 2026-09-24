@@ -93,6 +93,59 @@ export default function AdminProjectsPage() {
     });
   };
 
+  /* ---------- IMAGE ARRAY HELPERS (per project) ---------- */
+  const imgAdd = (projIdx: number) => {
+    setData((prev: any) => {
+      const arr = [...(prev.completed?.items || [])];
+      if (arr[projIdx]) {
+        const images = [...(arr[projIdx].images || [])];
+        if (images.length === 0 && arr[projIdx].image) images.push(arr[projIdx].image);
+        images.push('');
+        arr[projIdx] = { ...arr[projIdx], images };
+      }
+      return { ...prev, completed: { ...(prev.completed || {}), items: arr } };
+    });
+  };
+
+  const imgChange = (projIdx: number, imgIdx: number, value: string) => {
+    setData((prev: any) => {
+      const arr = [...(prev.completed?.items || [])];
+      if (arr[projIdx]) {
+        const images = [...(arr[projIdx].images || [])];
+        images[imgIdx] = value;
+        arr[projIdx] = { ...arr[projIdx], images };
+      }
+      return { ...prev, completed: { ...(prev.completed || {}), items: arr } };
+    });
+  };
+
+  const imgRemove = (projIdx: number, imgIdx: number) => {
+    setData((prev: any) => {
+      const arr = [...(prev.completed?.items || [])];
+      if (arr[projIdx]) {
+        const images = [...(arr[projIdx].images || [])];
+        images.splice(imgIdx, 1);
+        arr[projIdx] = { ...arr[projIdx], images };
+      }
+      return { ...prev, completed: { ...(prev.completed || {}), items: arr } };
+    });
+  };
+
+  const imgMove = (projIdx: number, imgIdx: number, dir: -1 | 1) => {
+    setData((prev: any) => {
+      const arr = [...(prev.completed?.items || [])];
+      if (arr[projIdx]) {
+        const images = [...(arr[projIdx].images || [])];
+        const newIdx = imgIdx + dir;
+        if (newIdx < 0 || newIdx >= images.length) return prev;
+        const [item] = images.splice(imgIdx, 1);
+        images.splice(newIdx, 0, item);
+        arr[projIdx] = { ...arr[projIdx], images };
+      }
+      return { ...prev, completed: { ...(prev.completed || {}), items: arr } };
+    });
+  };
+
   const triggerUpload = (cb: (url: string) => void) => {
     pendingUploadRef.current = cb;
     fileInputRef.current?.click();
@@ -266,45 +319,217 @@ export default function AdminProjectsPage() {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 20, marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
               <h4 style={{ margin: 0 }}>Projects ({(data.completed?.items || []).length})</h4>
-              <button onClick={() => arrAdd('completed', 'items', { image: '', fallbackIcon: 'fa-solid fa-leaf', date: '', title: '', text: '', donor: 'SEA', budget: '' })} style={goldBtn}>+ Add Project</button>
+              <button
+                onClick={() =>
+                  arrAdd('completed', 'items', {
+                    images: [''],
+                    image: '',
+                    fallbackIcon: 'fa-solid fa-leaf',
+                    date: '',
+                    title: '',
+                    text: '',
+                    donor: 'SEA',
+                    budget: '',
+                  })
+                }
+                style={goldBtn}
+              >
+                + Add Project
+              </button>
             </div>
 
-            {(data.completed?.items || []).map((p: any, i: number) => (
-              <div key={i} style={rowBox}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
-                  <strong style={{ color: '#06283D' }}>Project {i + 1}: {p.title || 'Untitled'}</strong>
-                  <div style={{ display: 'flex', gap: 6 }}>
-                    <button onClick={() => arrMove('completed', 'items', i, -1)} disabled={i === 0} style={{ ...smallBtn, opacity: i === 0 ? 0.4 : 1 }}>↑</button>
-                    <button onClick={() => arrMove('completed', 'items', i, 1)} disabled={i === (data.completed?.items || []).length - 1} style={{ ...smallBtn, opacity: i === (data.completed?.items || []).length - 1 ? 0.4 : 1 }}>↓</button>
-                    <button onClick={() => arrRemove('completed', 'items', i)} style={dangerBtn}>Delete</button>
+            {(data.completed?.items || []).map((p: any, i: number) => {
+              // Normalize: if project has `image` but no `images`, seed the array
+              const images: string[] = Array.isArray(p.images) && p.images.length
+                ? p.images
+                : p.image
+                ? [p.image]
+                : [];
+
+              return (
+                <div key={i} style={rowBox}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
+                    <strong style={{ color: '#06283D' }}>Project {i + 1}: {p.title || 'Untitled'}</strong>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button onClick={() => arrMove('completed', 'items', i, -1)} disabled={i === 0} style={{ ...smallBtn, opacity: i === 0 ? 0.4 : 1 }}>↑</button>
+                      <button onClick={() => arrMove('completed', 'items', i, 1)} disabled={i === (data.completed?.items || []).length - 1} style={{ ...smallBtn, opacity: i === (data.completed?.items || []).length - 1 ? 0.4 : 1 }}>↓</button>
+                      <button onClick={() => arrRemove('completed', 'items', i)} style={dangerBtn}>Delete</button>
+                    </div>
+                  </div>
+
+                  <label style={labelStyle}>Title</label>
+                  <input value={p.title || ''} onChange={(e) => arrChange('completed', 'items', i, 'title', e.target.value)} style={inputStyle} />
+
+                  <label style={labelStyle}>Date</label>
+                  <input value={p.date || ''} onChange={(e) => arrChange('completed', 'items', i, 'date', e.target.value)} placeholder="January 29, 2021" style={inputStyle} />
+
+                  <label style={labelStyle}>Description</label>
+                  <textarea value={p.text || ''} onChange={(e) => arrChange('completed', 'items', i, 'text', e.target.value)} rows={2} style={inputStyle} />
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div>
+                      <label style={labelStyle}>Donor</label>
+                      <input value={p.donor || ''} onChange={(e) => arrChange('completed', 'items', i, 'donor', e.target.value)} style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Budget</label>
+                      <input value={p.budget || ''} onChange={(e) => arrChange('completed', 'items', i, 'budget', e.target.value)} placeholder="$800" style={inputStyle} />
+                    </div>
+                  </div>
+
+                  <label style={labelStyle}>Fallback Icon (shown if no images load)</label>
+                  <input value={p.fallbackIcon || ''} onChange={(e) => arrChange('completed', 'items', i, 'fallbackIcon', e.target.value)} placeholder="fa-solid fa-leaf" style={inputStyle} />
+
+                  {/* ---------- IMAGES SECTION ---------- */}
+                  <div
+                    style={{
+                      marginTop: 14,
+                      padding: 16,
+                      background: '#fff',
+                      border: '1.5px solid #99F6E4',
+                      borderRadius: 12,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: 14,
+                        flexWrap: 'wrap',
+                        gap: 8,
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: 700, color: '#0F766E', fontSize: '0.9rem' }}>
+                          <i className="fas fa-images" style={{ marginRight: 8 }} />
+                          Images ({images.length})
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#0F766E', marginTop: 2 }}>
+                          Add 2, 3, 4+ images — they&apos;ll show as a gallery.
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => imgAdd(i)}
+                        style={{
+                          background: '#0D9488',
+                          color: '#fff',
+                          border: 'none',
+                          padding: '8px 16px',
+                          borderRadius: 8,
+                          cursor: 'pointer',
+                          fontWeight: 700,
+                          fontFamily: 'Inter, sans-serif',
+                          fontSize: '0.82rem',
+                        }}
+                      >
+                        + Add Image
+                      </button>
+                    </div>
+
+                    {images.length === 0 && (
+                      <p style={{ fontSize: '0.82rem', color: '#6B7280', textAlign: 'center', padding: '10px 0' }}>
+                        No images yet. Click <strong>+ Add Image</strong> above.
+                      </p>
+                    )}
+
+                    {images.map((img: string, ii: number) => (
+                      <div
+                        key={ii}
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: '60px 1fr auto',
+                          gap: 10,
+                          alignItems: 'center',
+                          padding: 10,
+                          background: '#F9FAFB',
+                          borderRadius: 10,
+                          marginBottom: 8,
+                          border: '1px solid #E5E7EB',
+                        }}
+                      >
+                        {/* Preview thumbnail */}
+                        <div
+                          style={{
+                            width: 60,
+                            height: 60,
+                            borderRadius: 8,
+                            overflow: 'hidden',
+                            background: '#E5E7EB',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                          }}
+                        >
+                          {img ? (
+                            <img
+                              src={img}
+                              alt=""
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          ) : (
+                            <i className="fas fa-image" style={{ color: '#9CA3AF', fontSize: 18 }} />
+                          )}
+                        </div>
+
+                        {/* URL input + Upload */}
+                        <div style={{ display: 'flex', gap: 8, minWidth: 0 }}>
+                          <input
+                            value={img}
+                            onChange={(e) => imgChange(i, ii, e.target.value)}
+                            placeholder="/images/project.jpg"
+                            style={{
+                              ...inputStyle,
+                              marginBottom: 0,
+                              flex: 1,
+                              minWidth: 0,
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => triggerUpload((url) => imgChange(i, ii, url))}
+                            style={tealBtn}
+                          >
+                            <i className="fas fa-upload" style={{ marginRight: 6 }} /> Upload
+                          </button>
+                        </div>
+
+                        {/* Controls */}
+                        <div style={{ display: 'flex', gap: 4 }}>
+                          <button
+                            onClick={() => imgMove(i, ii, -1)}
+                            disabled={ii === 0}
+                            style={{ ...smallBtn, opacity: ii === 0 ? 0.4 : 1 }}
+                            title="Move up"
+                          >
+                            ↑
+                          </button>
+                          <button
+                            onClick={() => imgMove(i, ii, 1)}
+                            disabled={ii === images.length - 1}
+                            style={{ ...smallBtn, opacity: ii === images.length - 1 ? 0.4 : 1 }}
+                            title="Move down"
+                          >
+                            ↓
+                          </button>
+                          <button
+                            onClick={() => imgRemove(i, ii)}
+                            style={dangerBtn}
+                            title="Remove image"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-
-                <label style={labelStyle}>Title</label>
-                <input value={p.title || ''} onChange={(e) => arrChange('completed', 'items', i, 'title', e.target.value)} style={inputStyle} />
-
-                <label style={labelStyle}>Date</label>
-                <input value={p.date || ''} onChange={(e) => arrChange('completed', 'items', i, 'date', e.target.value)} placeholder="January 29, 2021" style={inputStyle} />
-
-                <label style={labelStyle}>Description</label>
-                <textarea value={p.text || ''} onChange={(e) => arrChange('completed', 'items', i, 'text', e.target.value)} rows={2} style={inputStyle} />
-
-                <label style={labelStyle}>Donor</label>
-                <input value={p.donor || ''} onChange={(e) => arrChange('completed', 'items', i, 'donor', e.target.value)} style={inputStyle} />
-
-                <label style={labelStyle}>Budget</label>
-                <input value={p.budget || ''} onChange={(e) => arrChange('completed', 'items', i, 'budget', e.target.value)} placeholder="$800" style={inputStyle} />
-
-                <label style={labelStyle}>Image</label>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-                  <input value={p.image || ''} onChange={(e) => arrChange('completed', 'items', i, 'image', e.target.value)} style={{ ...inputStyle, marginBottom: 0, flex: 1 }} />
-                  <button type="button" onClick={() => triggerUpload((url) => arrChange('completed', 'items', i, 'image', url))} style={tealBtn}>Upload</button>
-                </div>
-
-                <label style={labelStyle}>Fallback Icon (shown if image missing)</label>
-                <input value={p.fallbackIcon || ''} onChange={(e) => arrChange('completed', 'items', i, 'fallbackIcon', e.target.value)} placeholder="fa-solid fa-leaf" style={inputStyle} />
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

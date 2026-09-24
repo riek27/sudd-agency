@@ -1,9 +1,26 @@
 import { getPage } from '@/lib/db';
 import { projectsDefaults } from '@/lib/defaults';
 import Link from 'next/link';
-import ProjectImage from './ProjectImage';
+import ProjectGallery from './ProjectGallery';
 
 export const dynamic = 'force-dynamic';
+
+/* Normalize: accept both old `image` (singular) and new `images` (array) */
+function normalizeProject(p: any) {
+  let images: string[] = [];
+
+  if (Array.isArray(p.images) && p.images.length > 0) {
+    images = p.images.filter(Boolean);
+  } else if (p.image) {
+    images = [p.image];
+  }
+
+  return {
+    ...p,
+    images,
+    fallbackIcon: p.fallbackIcon || 'fa-solid fa-leaf',
+  };
+}
 
 export default async function ProjectsPage() {
   let data = { ...projectsDefaults };
@@ -16,6 +33,7 @@ export default async function ProjectsPage() {
   }
 
   const { hero, methodology, completed, stats, cta } = data;
+  const projects = (completed?.items || []).map(normalizeProject);
 
   return (
     <>
@@ -35,8 +53,7 @@ export default async function ProjectsPage() {
               className="hero-title reveal reveal-delay-1"
               style={{ margin: '0 auto 24px' }}
             >
-              {hero.title}{' '}
-              <span className="accent">{hero.titleAccent}</span>
+              {hero.title} <span className="accent">{hero.titleAccent}</span>
             </h1>
             <p
               className="hero-subtitle reveal reveal-delay-2"
@@ -94,16 +111,16 @@ export default async function ProjectsPage() {
           </div>
 
           <div className="grid-3">
-            {(completed.items || []).map((p: any, i: number) => (
+            {projects.map((p: any, i: number) => (
               <article
                 key={i}
                 className={`highlight-card reveal reveal-delay-${i % 3}`}
               >
                 <div className="highlight-img">
-                  <ProjectImage
-                    src={p.image}
-                    alt={p.title}
-                    fallbackIcon={p.fallbackIcon || 'fa-solid fa-leaf'}
+                  <ProjectGallery
+                    images={p.images}
+                    title={p.title}
+                    fallbackIcon={p.fallbackIcon}
                   />
                 </div>
                 <div style={{ padding: '24px 22px 26px' }}>
@@ -157,10 +174,7 @@ export default async function ProjectsPage() {
         }}
       >
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div
-            className="section-head-center reveal"
-            style={{ marginBottom: 60 }}
-          >
+          <div className="section-head-center reveal" style={{ marginBottom: 60 }}>
             <span className="eyebrow">{stats.eyebrow}</span>
             <h2 className="section-title" style={{ color: '#fff' }}>
               {stats.title}{' '}

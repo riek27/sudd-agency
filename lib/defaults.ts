@@ -997,7 +997,7 @@ export const projectsDefaults: any = {
       },
     ],
   },
-  completed: {
+    completed: {
     eyebrow: 'Our Portfolio',
     title: 'Completed',
     titleAccent: 'Projects',
@@ -1005,6 +1005,7 @@ export const projectsDefaults: any = {
       'Each project is a step toward a healthier, more resilient South Sudan.',
     items: [
       {
+        images: ['/images/sudd4.png', '/images/sudd3.png', '/images/sudd2.png'],
         image: '/images/sudd4.png',
         fallbackIcon: 'fa-solid fa-leaf',
         date: 'January 29, 2021',
@@ -1014,6 +1015,7 @@ export const projectsDefaults: any = {
         budget: '$800',
       },
       {
+        images: ['/images/sudd3.png', '/images/sudd4.png'],
         image: '/images/sudd3.png',
         fallbackIcon: 'fa-solid fa-stethoscope',
         date: 'February 10 – 27, 2021',
@@ -1023,6 +1025,7 @@ export const projectsDefaults: any = {
         budget: '$1,200',
       },
       {
+        images: ['/images/sudd2.png', '/images/sudd5.png', '/images/sudd6.png', '/images/sudd3.png'],
         image: '/images/sudd2.png',
         fallbackIcon: 'fa-solid fa-oil-can',
         date: 'April 18 – May 2, 2023',
@@ -1032,6 +1035,7 @@ export const projectsDefaults: any = {
         budget: '$20,000',
       },
       {
+        images: ['/images/sudd1.png', '/images/sudd4.png'],
         image: '/images/sudd1.png',
         fallbackIcon: 'fa-solid fa-water',
         date: 'September – November 2025',
@@ -1041,6 +1045,7 @@ export const projectsDefaults: any = {
         budget: '$500',
       },
       {
+        images: ['/images/sudd5.png', '/images/sudd6.png', '/images/sudd3.png'],
         image: '/images/sudd5.png',
         fallbackIcon: 'fa-solid fa-utensils',
         date: 'May – November 2026',
