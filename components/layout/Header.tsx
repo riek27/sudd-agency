@@ -23,11 +23,25 @@ const FALLBACK_HEADER = {
     { label: 'Impact', href: '/impact' },
     { label: 'Projects', href: '/projects' },
     { label: 'News', href: '/news' },
+    { label: 'Resources', href: '/resources' },
     { label: 'Partners', href: '/partners' },
     { label: 'Get Involved', href: '/get-involved' },
     { label: 'Contact', href: '/contact' },
   ],
 };
+
+// Safety net: ensure Resources is always present, even if API/DB is stale
+function withResources(links: any[]): any[] {
+  const list = Array.isArray(links) && links.length > 0 ? [...links] : [];
+  const hasResources = list.some((l: any) => l.href === '/resources');
+  if (!hasResources) {
+    const partnersIdx = list.findIndex((l: any) => l.href === '/partners');
+    const resourceLink = { label: 'Resources', href: '/resources' };
+    if (partnersIdx >= 0) list.splice(partnersIdx, 0, resourceLink);
+    else list.push(resourceLink);
+  }
+  return list;
+}
 
 export default function Header() {
   const [header, setHeader] = useState<any>(FALLBACK_HEADER);
@@ -40,10 +54,7 @@ export default function Header() {
           setHeader({
             ...FALLBACK_HEADER,
             ...json.header,
-            navLinks:
-              Array.isArray(json.header.navLinks) && json.header.navLinks.length > 0
-                ? json.header.navLinks
-                : FALLBACK_HEADER.navLinks,
+            navLinks: withResources(json.header.navLinks),
             topBarLinks:
               Array.isArray(json.header.topBarLinks) && json.header.topBarLinks.length > 0
                 ? json.header.topBarLinks

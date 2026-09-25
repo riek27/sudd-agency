@@ -13,7 +13,6 @@ export async function POST(request: Request): Promise<NextResponse> {
       onBeforeGenerateToken: async () => {
         return {
           allowedContentTypes: [
-            // Documents
             'application/pdf',
             'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -24,20 +23,13 @@ export async function POST(request: Request): Promise<NextResponse> {
             'text/plain',
             'text/csv',
             'application/zip',
-            // Images
-            'image/jpeg',
-            'image/png',
-            'image/webp',
-            'image/gif',
-            'image/svg+xml',
           ],
-          addRandomSuffix: false,
-          maximumSizeInBytes: 500 * 1024 * 1024, // 500 MB
+          addRandomSuffix: true,
+          allowOverwrite: true,
+          maximumSizeInBytes: 500 * 1024 * 1024,
         };
       },
-      onUploadCompleted: async () => {
-        // Optional: run after successful upload
-      },
+      onUploadCompleted: async () => {},
     });
 
     return NextResponse.json(jsonResponse);

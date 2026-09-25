@@ -1670,3 +1670,92 @@ export const contactDefaults: any = {
     web3formsKey: 'ec45243e-76e9-42d9-a0bb-9af8694af0a4',
   },
 };
+
+export const resourcesDefaults: any = {
+  hero: {
+    eyebrow: 'Resources & Publications',
+    title: 'Resources &',
+    titleAccent: 'Publications',
+    subtitle:
+      'Knowledge, reports and organizational documents supporting transparency and learning.',
+    description:
+      "Browse and download SEA's annual reports, environmental assessments, public statements, policies, governance documents and operational frameworks.",
+    backgroundImage: '/images/sudd2.png',
+  },
+  categories: {
+    eyebrow: 'Resource Categories',
+    title: 'Browse by Category',
+    subtitle: 'Documents published by Sudd Environment Agency.',
+    items: [
+      {
+        id: 'annual-reports',
+        icon: 'fas fa-file-alt',
+        title: 'Annual Reports',
+        text: "Yearly summaries of SEA's activities, achievements, and financial performance.",
+        accent: '#0D9488',
+      },
+      {
+        id: 'assessments',
+        icon: 'fas fa-clipboard-check',
+        title: 'Assessments',
+        text: 'Environmental and health assessments from our field programs.',
+        accent: '#1B5E45',
+      },
+      {
+        id: 'public-statements',
+        icon: 'fas fa-bullhorn',
+        title: 'Public Statements',
+        text: 'Official positions on climate action, wetlands, and community resilience.',
+        accent: '#D4A017',
+      },
+      {
+        id: 'policies',
+        icon: 'fas fa-shield-alt',
+        title: 'Policies',
+        text: 'Organizational policies, governance documents, and operational frameworks.',
+        accent: '#7C3AED',
+      },
+    ],
+  },
+  library: {
+    eyebrow: 'All Resources',
+    title: 'Document Library',
+    subtitle: 'Search and filter all documents published by SEA.',
+    searchPlaceholder: 'Search resources...',
+    allLabel: 'All Categories',
+    emptyTitle: 'Resources coming soon',
+    emptyText:
+      "SEA's reports, assessments, policies and public statements will be available here.",
+    downloadText: 'Download',
+    viewText: 'View',
+  },
+  transparency: {
+    eyebrow: 'Commitment',
+    title: 'Committed to Transparency',
+    text: 'SEA is committed to transparency, ethical conduct, and community-centered accountability.',
+    items: [
+      {
+        icon: 'fas fa-file-alt',
+        title: 'Annual Reports',
+        text: 'Activities, achievements and financial performance.',
+      },
+      {
+        icon: 'fas fa-shield-alt',
+        title: 'Policies',
+        text: 'Governance and operational frameworks.',
+      },
+      {
+        icon: 'fas fa-bullhorn',
+        title: 'Public Statements',
+        text: "SEA's official positions and statements.",
+      },
+    ],
+  },
+  cta: {
+    title: 'Looking for More Information?',
+    text: "If you would like to learn more about SEA's work, programs or organizational resources, get in touch with our team.",
+    buttonText: 'Contact Us',
+    buttonLink: '/contact',
+  },
+  resources: [] as any[],
+};
